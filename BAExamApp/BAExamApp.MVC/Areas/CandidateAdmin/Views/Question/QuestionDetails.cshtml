@@ -1,0 +1,171 @@
+﻿@{
+    ViewData["Title"] = "QuestionDetails";
+}
+
+
+@model CandidateQuestionDetailsVM
+<head>
+        <script src="~/js/jquery.min.js"></script>
+        <script src="~/lib/limonte-sweetalert2/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<div class="card py-16 ">
+    <div class="d-flex justify-content-between ps-9 pt-6">
+        <!--begin::Card title-->
+        <div>
+            <h3 class="fw-bolder m-0">@SharedLocalizer["Question_Detail"]</h3>
+        </div>
+        <!--end::Card title-->
+        <!--begin::Action-->
+        <div class="d-flex align-items-center">
+            <a asp-action="QuestionList" asp-route-showAllQuestions="true" class="btn p-5 mx-2 btn-primary">@SharedLocalizer["Back_List"]</a>
+
+            <a data-id="@Model.Id" class="btn p-5 mx-2 btn-danger deleteAction">@SharedLocalizer["Delete"]</a>
+        </div>
+        <!--end::Action-->
+    </div>
+    <div class="card-body row fs-6 py-15 px-10 py-lg-15 px-lg-15">
+        <div class="col-lg-6 mb-3">
+            <div class="row mb-7">
+                <label class="w-150px fw-bold text-muted">@Html.DisplayNameFor(model => model.CreatedDate) :</label>
+                <div class="col-xl-8 col-12">
+                    <span class="fw-bolder fs-6 text-gray-800">@Model.CreatedDate.ToShortDateString()</span>
+                </div>
+            </div>
+
+            <div class="row mb-7">
+                <label class="w-150px fw-bold text-muted">
+                    @Html.DisplayNameFor(model => model.CandidateQuestionType) :
+                </label>
+                <div class="col-xl-8 col-12">
+                    <span class="fw-bolder fs-6 text-gray-800">
+                        @Html.DisplayFor(model => model.CandidateQuestionType)
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="row mb-7">
+                <label class="w-150px fw-bold text-muted">
+                    @Html.DisplayNameFor(model => model.Content) :
+                </label>
+                <div class="col-xl-8 col-12">
+                    <span class="fw-bolder fs-6 text-gray-800">
+                        @Html.DisplayFor(model => model.Content)
+                    </span>
+                </div>
+            </div>
+        </div>
+        @if (Model.Image != null)
+        {
+            <div class="row col-lg-4 mb-3">
+                <label class=" fw-bold text-muted mb-3">
+                    @Html.DisplayNameFor(model => model.Image)
+                </label>
+                <div class="image-input image-input-outline fv-row"
+                     data-kt-image-input="true">
+                    <div class="col-lg-12"
+                         style="display: flex; justify-content: flex-start">
+                        <img id="defaultImage"
+                             class="col-lg-12 img-fluid"
+                             src="data:image/jpeg;base64,@Model.Image"
+                             alt="Profile" />
+                    </div>
+                </div>
+            </div>
+        }
+        <hr />
+        <div class="row mb-7">
+            <label class="w-150px fw-bold text-muted">
+                @Html.DisplayNameFor(model => model.QuestionAnswers) :
+            </label>
+            <div class="col-xl-10 col-12">
+
+                @foreach (var item in Model.QuestionAnswers)
+                {
+                    @if (item.IsRightAnswer)
+                    {
+                        <p class="fw-bolder fs-6 text-gray-800">
+                            @item.Answer
+                            <span class="badge badge-success">@SharedLocalizer["True"]</span>
+                        </p>
+
+                    }
+                    else
+                    {
+                        <p class="fw-bolder fs-6 text-gray-800">
+                            @item.Answer
+                        </p>
+
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        var localizedTexts = {
+            confirmTitle: '@SharedLocalizer["Confirm_Delete_Title"]', // "fullName adlı admini silmek istediğinize emin misiniz?"
+            confirmText: '@SharedLocalizer["Confirm_Delete_Text"]', // "Bu işlem geri alınamaz!"
+            confirmButtonText2: '@SharedLocalizer["Confirm_Button_Text"]', // "Evet, sil!"
+            cancelButtonText2: '@SharedLocalizer["Cancel_Button_Text"]', // "Hayır, iptal et"
+            unsavedChangesTitle: '@SharedLocalizer["Unsaved_Changes_Title"]',
+            unsavedChangesText: '@SharedLocalizer["Unsaved_Changes_Text"]',
+            confirmButtonText: '@SharedLocalizer["Yes_Leave"]',
+            cancelButtonText: '@SharedLocalizer["No_Stay"]',
+            formSubmittedText: '@SharedLocalizer["Form_Submitted_Text"]',
+            okButtonText: '@SharedLocalizer["Ok_Button_Text"]'
+        };
+        $(".deleteAction").click(function () {
+            const id = $(this).data("id");
+            Swal.fire({
+                title: `${localizedTexts.confirmTitle}`,
+                text: localizedTexts.confirmText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: localizedTexts.confirmButtonText2,
+                cancelButtonText: localizedTexts.cancelButtonText2
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("Delete")" + "?id=" + id,
+                        success: function (result) {
+                            if (result.isSuccess) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Başarılı',
+                                    text: 'Silme işlemi başarıyla tamamlandı!'
+                                });
+                               ;
+                                setTimeout(() => window.location.href = "@Url.Action("QuestionList")", 2000);
+
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Hata',
+                                    text: 'Silme işlemi sırasında bir hata oluştu!',
+                                    confirmButtonText: 'Tamam'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Hata',
+                                text: 'Silme işlemi sırasında bir hata oluştu!'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>

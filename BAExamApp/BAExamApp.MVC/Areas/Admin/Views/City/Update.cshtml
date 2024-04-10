@@ -1,0 +1,31 @@
+﻿@model AdminCityUpdateVM
+
+@{
+    ViewData["Title"] = @ViewLocalizer["Update_City"];
+}
+<div class="modal fade" id="updateCityModal" tabindex="-1" aria-labelledby="updateCityModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form asp-controller="City" asp-action="Update" method="post" id="updateCityForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateCityModalLabel">@SharedLocalizer["City_Update"]</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3 form-floating">
+                        <input asp-for="Name" type="text" class="form-control" required>
+                        <label asp-for="Name" class="form-label mb-2">@SharedLocalizer["City_Name"]</label>
+                    </div>
+                    <input asp-for="Id" type="hidden" />
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-secondary align-self-center ms-2" asp-controller="City" asp-action="Index">@SharedLocalizer["Back_List"]</a>
+                    <button type="submit" class="btn btn-primary">@SharedLocalizer["Update"]</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+

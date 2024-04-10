@@ -1,0 +1,76 @@
+﻿@model IEnumerable<AdminTrainerListVM>
+
+@{
+    ViewData["Title"] = ViewLocalizer["User"];
+}
+
+<section class="section dashboard">
+    <div class="row">
+        <div class="card recent-sales overflow-auto">
+            <div class="card-body">
+                <h5 class="card-title">@SharedLocalizer["Change_Role"]</h5>
+                <div class="d-flex align-content-center align-items-center " style="margin-bottom: 10px;">
+                    <form asp-controller="User" id="dropdownFrm" asp-action="Index" method="get">
+                        <select name="Role" id="rolDropdown" onchange="goster()">
+                            <option value="" selected="@( TempData["Role"] as string ==null ? true : false )">@SharedLocalizer["Make_Choise"]</option>
+                            <option value="Trainer" selected="@( TempData["Role"] as string =="Trainer" ? true : false )">@SharedLocalizer["Trainer"]</option>
+                        </select>
+                    </form>
+                    <label> @SharedLocalizer["Sign_In_As"]</label>
+                </div>
+                <table id="veriTablosu" class="table table-row-bordered datatable">
+                    <thead>
+                        <tr class="text-center">
+                            <th class="text-center fw-bold text-white" style="background-color:rgb(134,138,155)">@SharedLocalizer["First_Name"]</th>
+                            <th class="text-center fw-bold text-white " style="background-color: rgb(134,138,155)">@SharedLocalizer["Last_Name"]</th>
+                            <th class="text-center fw-bold text-white" style="background-color: rgb(134,138,155)">@SharedLocalizer["Transactions"]</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabloGovdesi">
+                        @foreach (var trainer in Model)
+                        {
+                            <tr>
+                                <td class="categories text-center">
+                                    <a>
+                                        <span class="post_category">@trainer.FirstName</span>
+                                    </a>
+                                </td>
+                                <td class="categories text-center">
+                                    <a>
+                                        <span class="post_category">@trainer.LastName</span>
+                                    </a>
+                                </td>
+                                <td class="categories text-center">
+                                    <a class="role-degistir" asp-area="Admin" asp-action="LoginAsTrainer" asp-controller="User" asp-route-trainerId="@trainer.Id">
+                                        @SharedLocalizer["Change_Role"]
+                                    </a>
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script src="~/js/changeRole.js"></script>
+<script src="~/dataTable/~/js/main.js"></script>
+<script src="~/dataTable/~/js/main.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+    var classroomCount = @Model.Count();
+    window.onload = function () {
+        paginationSetupDropdown(classroomCount);
+    }
+</script>
+
+<script>
+    function goster() {
+        document.getElementById("dropdownFrm").submit();
+
+    }
+</script>

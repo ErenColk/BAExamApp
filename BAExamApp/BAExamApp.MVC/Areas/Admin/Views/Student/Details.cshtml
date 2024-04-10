@@ -1,0 +1,148 @@
+﻿@model AdminStudentDetailVM
+@{
+    ViewData["Title"] = ViewLocalizer["Student_Details"];
+}
+
+
+
+<!--   profil detay -->
+
+
+<div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
+    <!--begin::Card header-->
+    <div class="card-header cursor-pointer">
+        <div class="card-title m-0">
+            <h3 class="fw-bolder m-0">@SharedLocalizer["Student_Details"]</h3>
+        </div>
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-secondary align-self-center ms-2" asp-controller="Student" asp-action="Index">@SharedLocalizer["Back_List"]</a>
+            <a class="btn btn-primary align-self-center ms-2" id="kt-update-student" onclick="loadStudentData('@Model.Id')" data-student-id="@Model.Id" data-bs-toggle="modal" data-bs-target="#kt_modal_update_student"  data-kt-users-table-filter="edit_row">@SharedLocalizer["Edit"]</a>
+            <a class="btn btn-danger align-self-center ms-2 deleteAction" data-id="@Model.Id"> @SharedLocalizer["Delete"] </a>
+        </div>
+    </div>
+    <!--begin::Card header-->
+    <!--begin::Card body-->
+    <div class="card-body p-9">
+        <!--begin::Row-->
+        <div class="row mb-7">
+            @if (Model.Image != null)
+            {
+                <div id="item-header-cover-image">
+                    <img src="data:image/jpeg;base64,@Model.Image"
+                         class="avatar user-1-avatar avatar-150 photo" width="150"
+                         height="150" alt="image" />
+                </div>
+            }
+            else
+            {
+                <div id="item-header-cover-image">
+                    <img src="~/media/avatars/blank.png"
+                         class="avatar user-1-avatar avatar-150 photo" width="150"
+                         height="150" alt="image" />
+                </div>
+            }
+        </div>
+        <div class="row mb-7">
+            <label class="col-lg-2 fw-bold text-muted">@SharedLocalizer["Name"]:</label>
+            <div class="col-lg-10">
+                <span class="fw-bold text-gray-800 fs-6">@Model.FirstName @Model.LastName</span>
+            </div>
+        </div>
+        <div class="row mb-7">
+            <label class="col-lg-2 fw-bold text-muted">@Html.DisplayNameFor(model => model.Gender):</label>
+            <div class="col-lg-10">
+                <span class="fw-bold text-gray-800 fs-6">@(Model.Gender == true ? SharedLocalizer["Man"] : SharedLocalizer["Woman"])</span>
+            </div>
+        </div>
+        <div class="row mb-7">
+            <label class="col-lg-2 fw-bold text-muted">@Html.DisplayNameFor(model => model.Email):</label>
+            <div class="col-lg-10">
+                <span class="fw-bold text-gray-800 fs-6">@Model.Email</span>
+            </div>
+        </div>
+        <div class="row mb-7">
+            <label class="col-lg-2 fw-bold text-muted">@Html.DisplayNameFor(model => model.DateOfBirth):</label>
+            <div class="col-lg-10">
+                <span class="fw-bold text-gray-800 fs-6">@Model.DateOfBirth.ToShortDateString()</span>
+            </div>
+        </div>
+
+        <div class="row mb-7">
+            <label class="col-lg-2 fw-bold text-muted">@ViewLocalizer["Classroom_Name"]:</label>
+            <div class="col-lg-10">
+                @if (Model.Classrooms.Any())
+                {
+                    <span class="fw-bold text-gray-800 fs-6">@string.Join(", ", Model.Classrooms)</span>
+                }
+            </div>
+
+            @if (Model.OtherEmails.Count != 0)
+            {
+                <div class="tables-grid-container" style="display:grid; grid-template-columns: auto auto; column-gap: 24px;">
+                    <div class="sc_table recent_jobs">
+                        <table summary="1" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td>@ViewLocalizer["OtherEmails"]</td>
+                                </tr>
+                                @foreach (var otherEmail in Model.OtherEmails)
+                                {
+                                    <tr>
+                                        <td class="otherEmails">
+                                            <span class="post_category">@otherEmail</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+<partial name="~/Areas/Admin/Views/Student/Update.cshtml" model="new AdminStudentUpdateVM()"></partial>
+
+@section Scripts
+{
+    <script src="~/newlayouts/src/js/custom/apps/user-management/users/view/update-student.js"></script>
+
+    <script>
+        var localizedTexts = {
+            unsavedChangesTitle: '@SharedLocalizer["Unsaved_Changes_Title"]',
+            unsavedChangesText: '@SharedLocalizer["Unsaved_Changes_Text"]',
+            confirmButtonText: '@SharedLocalizer["Yes_Leave"]',
+            cancelButtonText: '@SharedLocalizer["No_Stay"]',
+            formSubmittedText: '@SharedLocalizer["Form_Submitted_Text"]',
+            okButtonText: '@SharedLocalizer["Ok_Button_Text"]'
+        };
+        $(".deleteAction").click(function () {
+            const id = $(this).attr("data-id");
+            Swal.fire({
+                title: `${localizedTexts.confirmTitle}`,
+                text: localizedTexts.confirmText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: localizedTexts.confirmButtonText,
+                cancelButtonText: localizedTexts.cancelButtonText
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("Delete")" + "?id=" + id,
+                        success: function (result) {
+                            if (result.isSuccess) {
+                                setTimeout(() => location.href = "/Admin/Student", 2000)
+                            }
+
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

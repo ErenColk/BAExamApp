@@ -1,0 +1,120 @@
+﻿@model AdminExamRuleDetailsVM
+@{
+    ViewData["Title"] = ViewLocalizer["Exam_Rule_Details"];
+}
+
+<div class="card mb-5 mb-xl-10" id="kt_content">
+    <div class="card-header cursor-pointer" id="kt_contacts_main">
+        <div class="card-title m-0">
+            <h3 class="fw-bolder m-0"> @ViewLocalizer["Exam_Rule_Details"]</h3>
+        </div>
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-secondary align-self-center ms-2" asp-controller="ExamRule" asp-action="Index">@SharedLocalizer["Back_List"]</a>
+            <a class="btn btn-primary align-self-center ms-2" asp-controller="ExamRule" asp-action="Update" asp-route-id="@Model.Id">@SharedLocalizer["Update"]</a>
+            <a class="btn btn-danger align-self-center ms-2 deleteAction" data-id="@Model.Id"> @SharedLocalizer["Delete"] </a>
+        </div>
+    </div>
+    <div class="card-body p-9">
+        <div class="row mb-7">
+            <label class="col-lg-2 fw-bold text-muted">@ViewLocalizer["Exam_Rule_Name"]:</label>
+            <div>
+                <span class="fw-bold fs-6 text-gray-800">@Model.Name</span>
+            </div>
+        </div>
+        <div class="row mb-7">
+            <label class="col-lg-2 fw-bold text-muted">@ViewLocalizer["Exam_Rule_Description"]:</label>
+            <div>
+                <span class="fw-bold fs-6 text-gray-800" style="white-space: pre-line; ">@Model.Description</span>
+            </div> 
+        </div>
+        <div class="row mb-7">
+            <label class="col-lg-2 fw-bold text-muted">@ViewLocalizer["Product"]:</label>
+            <div>
+                <span class="fw-bold fs-6 text-gray-800">@Model.ProductName </span>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-9">
+        <div class="row mb-7">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-sm-2" style="font-weight:bold" colspan="6">@ViewLocalizer["Questions"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-sm-2" style="font-weight:bold">@ViewLocalizer["Question_SubjectName"]</td>
+                        <td class="col-sm-2" style="font-weight:bold">@ViewLocalizer["Question_SubtopicName"]</td>
+                        <td class="col-sm-2" style="font-weight:bold">@ViewLocalizer["Exam_Type"]</td>
+                        <td class="col-sm-2" style="font-weight:bold">@ViewLocalizer["Question_Type"]</td>
+                        <td class="col-sm-2" style="font-weight:bold">@ViewLocalizer["Question_Difficulty"]</td>
+                        <td class="col-sm-2" style="font-weight:bold">@ViewLocalizer["Question_Count"]</td>
+                    </tr>
+                    @if (Model.ExamRuleSubtopics is not null)
+                    {
+                        foreach (var item in Model.ExamRuleSubtopics)
+                        {
+                            <tr>
+                                <td class="fw-bold fs-6 text-gray-800">@item.SubjectName</td>
+                                <td class="fw-bold fs-6 text-gray-800">@item.SubtopicName</td>
+                                <td class="fw-bold fs-6 text-gray-800">@Html.DisplayFor(x => item.ExamType)</td>
+                                <td class="fw-bold fs-6 text-gray-800">@Html.DisplayFor(x => item.QuestionType)</td>
+                                <td class="fw-bold fs-6 text-gray-800">@Html.DisplayFor(x => item.QuestionDifficultyName)</td>
+                                <td class="fw-bold fs-6 text-gray-800">@item.QuestionCount</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="categories" colspan="5">
+                                @SharedLocalizer["No_Data"]
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/limonte-sweetalert2/sweetalert2.all.js"></script>
+    <script>
+        var localizedTexts = {
+            confirmTitle: '@SharedLocalizer["Confirm_Delete_Title"]', // "fullName adlı admini silmek istediğinize emin misiniz?"
+            confirmText: '@SharedLocalizer["Confirm_Delete_Text"]', // "Bu işlem geri alınamaz!"
+            confirmButtonText: '@SharedLocalizer["Confirm_Button_Text"]', // "Evet, sil!"
+            cancelButtonText: '@SharedLocalizer["Cancel_Button_Text"]' // "Hayır, iptal et"
+        };
+        $(".deleteAction").click(function () {
+            const id = $(this).attr("data-id");
+            console.log(id);
+            // id = id.replace(/[{}]/g, '');
+            Swal.fire({
+                title: `${localizedTexts.confirmTitle}`,
+                text: localizedTexts.confirmText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: localizedTexts.confirmButtonText,
+                cancelButtonText: localizedTexts.cancelButtonText
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("Delete")" + "?id=" + id,
+                        success: function (result) {
+                            if (result.isSuccess) {
+                                setTimeout(() => location.href = "@Url.Action("index")", 1000)
+                            }
+                        }
+                    });
+                }
+            })
+        });
+    </script>
+}

@@ -1,0 +1,106 @@
+﻿@model AdminSubjectDetailVM
+
+@{
+    ViewData["Title"] = ViewLocalizer["Subject_Details"];
+}
+<div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
+    <div class="card-header cursor-pointer">
+        <div class="card-title m-0">
+            <h5 class="text-center">@ViewLocalizer["Subject_Details"]</h5>
+        </div>
+        <div class="d-flex justify-content-end">
+            <a class="btn btn-secondary align-self-center ms-2" asp-controller="Subject" asp-action="Index">@SharedLocalizer["Back_List"]</a>
+            <a class="btn btn-primary align-self-center ms-2" data-bs-toggle="modal" data-bs-target="#updateSubjectModal" data-subject-id="@Model.Id" data-subject-name="@Model.Name">
+                @SharedLocalizer["Update"]
+            </a>
+            <a class="btn btn-danger align-self-center ms-2 deleteAction" data-id="@Model.Id"> @SharedLocalizer["Delete"] </a>
+        </div>
+    </div>
+    <div class="card-body p-9">
+        <div class="row mb-7">
+            <label class="col-lg-2 fw-bold text-muted">@SharedLocalizer["Subject_Name"]:</label>
+            <div class="col-lg-10 fv-row">
+                <span class="fw-bold text-gray-800 fs-6">@Model.Name</span>
+            </div>
+        </div>
+        <div class="row mb-7">
+            <label class="col-lg-2 fw-bold text-muted">@SharedLocalizer["Products_That_Include_Subject"]:</label>
+            <div class="col-lg-10">
+                <span class="fw-bold fs-6 text-gray-800">
+                    @foreach (var product in Model.Products)
+                    {
+                        <tr>
+                            <td class="categories">
+                                <span style="font-size: 15px;" class="post_category">@product.Name</span>
+                            </td>
+                        </tr>
+                    }
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="~/Areas/Admin/Views/Subject/UpdatePartialView.cshtml" model="new AdminSubjectUpdateVM()" />
+
+@section Scripts
+    {
+
+    <script src="~/js/updateSubject.js"></script>
+    <script src="~/lib/limonte-sweetalert2/sweetalert2.all.js"></script>
+    @* <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> *@
+    <script>
+        var localizedTexts = {
+            confirmTitle: '@SharedLocalizer["Confirm_Delete_Title"]', // "fullName adlı admini silmek istediğinize emin misiniz?"
+            confirmText: '@SharedLocalizer["Confirm_Delete_Text"]', // "Bu işlem geri alınamaz!"
+            confirmButtonText: '@SharedLocalizer["Confirm_Button_Text"]', // "Evet, sil!"
+            cancelButtonText: '@SharedLocalizer["Cancel_Button_Text"]' // "Hayır, iptal et"
+        };
+        $(document).ready(function () {
+            $(".deleteAction").click(function () {
+                const id = $(this).data("id");
+                Swal.fire({
+                    title: `${localizedTexts.confirmTitle}`,
+                    text: localizedTexts.confirmText,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: localizedTexts.confirmButtonText,
+                    cancelButtonText: localizedTexts.cancelButtonText
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "@Url.Action("Delete")" + "?id=" + id,
+                            success: function (result) {
+                                if (result.isSuccess) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Başarılı',
+                                        text: 'Silme işlemi başarıyla tamamlandı!'
+                                    });
+                                    setTimeout(() => location.href = "@Url.Action("index")", 2000);
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Hata',
+                                        text: 'Silme işlemi sırasında bir hata oluştu!',
+                                        confirmButtonText: 'Tamam'
+                                    });
+                                }
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Hata',
+                                    text: 'Silme işlemi sırasında bir hata oluştu!'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

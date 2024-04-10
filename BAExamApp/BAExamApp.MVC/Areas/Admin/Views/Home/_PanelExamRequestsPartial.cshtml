@@ -1,0 +1,242 @@
+﻿<div class="col-md-4">
+    <div class="card card-xl-stretch mb-xl-8 panel-question-requests mt-4 p-3 h-400px overflow-auto">
+        <!-- begin::Header-->
+        <div class="card-header border-0">
+            <h3 class="card-title fw-bolder text-dark">Onay Bekleyen Sorular</h3>
+            <div class="card-toolbar">
+                <!--begin::Menu-->
+                <button type="button"
+                        class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
+                        data-kt-menu-trigger="click"
+                        data-kt-menu-placement="bottom-end">
+                    <!--begin::Svg Icon | path: icons/duotune/general/gen024.svg-->
+                    <span class="svg-icon svg-icon-2">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="24px"
+                             height="24px"
+                             viewBox="0 0 24 24">
+                            <g stroke="none"
+                               stroke-width="1"
+                               fill="none"
+                               fill-rule="evenodd">
+                                <rect x="5"
+                                      y="5"
+                                      width="5"
+                                      height="5"
+                                      rx="1"
+                                      fill="currentColor" />
+                                <rect x="14"
+                                      y="5"
+                                      width="5"
+                                      height="5"
+                                      rx="1"
+                                      fill="currentColor"
+                                      opacity="0.3" />
+                                <rect x="5"
+                                      y="14"
+                                      width="5"
+                                      height="5"
+                                      rx="1"
+                                      fill="currentColor"
+                                      opacity="0.3" />
+                                <rect x="14"
+                                      y="14"
+                                      width="5"
+                                      height="5"
+                                      rx="1"
+                                      fill="currentColor"
+                                      opacity="0.3" />
+                            </g>
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                </button>
+                <!--begin::Menu 3-->
+                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-bold w-300px py-3"
+                     data-kt-menu="true">
+                    <!--begin::Heading-->
+                    <div class="menu-item px-3">
+                        <div class="menu-content text-muted pb-2 px-3 fs-7 text-uppercase">
+                            İşlemler
+                        </div>
+                    </div>
+                    <!--end::Heading-->
+                    <!--begin::Menu item-->
+                    <div class="menu-item px-3">
+                        <a href="#" class="menu-link px-3">Seçilenleri Onayla</a>
+                    </div>
+                    <!--end::Menu item-->
+                    <!--begin::Menu item-->
+                    <div class="menu-item px-3">
+                        <a href="#" class="menu-link flex-stack px-3">
+                            Seçilenleri Beklemeye Al
+                        </a>
+                    </div>
+                    <!--end::Menu item-->
+                    <!--begin::Menu item-->
+                    <div class="menu-item px-3">
+                        <a href="#" class="menu-link px-3">Seçilenleri Reddet</a>
+                    </div>
+                    <!--end::Menu item-->
+                    <!--begin::Menu item-->
+                    <div class="menu-item px-3 my-1">
+                        <a href="#" class="menu-link px-3">Seçilenlere Değişiklik Talep Et</a>
+                    </div>
+                    <!--end::Menu item-->
+                </div>
+                <!--end::Menu 3-->
+                <!--end::Menu-->
+            </div>
+        </div>
+        <!--end::Header -->
+
+        <script>
+            const status = {
+                1: "New",
+                2: "Approved",
+                3: "ChangeRequested",
+                4: "Rejected",
+            };
+
+            const statusUrgent = {
+                1: "Very Urgent",
+                2: "Urgent",
+                3: "Normal",
+            };
+
+            const data = {
+                questions: [
+                    {
+                        id: 1,
+                        questionTitle: "Bu bir soru başlığıdır",
+                        questionContent: "Bu bir soru içeriğidir",
+                        urgentStatus: 1,
+                        requestDate: "2024-04-01 10:10:10",
+                        status: 1,
+                    },
+
+                    {
+                        id: 2,
+                        questionTitle: "Bu bir soru başlığıdır",
+                        questionContent: "Bu bir soru içeriğidir",
+                        urgentStatus: 2,
+                        requestDate: "2024-03-16 10:10:10",
+                        status: 2,
+                    },
+                    {
+                        id: 3,
+                        questionTitle: "Bu bir soru başlığıdır",
+                        questionContent: "Bu bir soru içeriğidir",
+                        urgentStatus: 3,
+                        requestDate: "2024-03-28 10:10:10",
+                        status: 3,
+                    },
+                    {
+                        id: 4,
+                        questionTitle: "Bu bir soru başlığıdır",
+                        questionContent: "Bu bir soru içeriğidir",
+                        urgentStatus: 2,
+                        requestDate: "2023-10-10 10:10:10",
+                        status: 2,
+                    },
+                    {
+                        id: 4,
+                        questionTitle: "Bu bir soru başlığıdır",
+                        questionContent: "Bu bir soru içeriğidir",
+                        urgentStatus: 2,
+                        requestDate: "2024-04-03 10:10:10",
+                        status: 1,
+                    },
+                    {
+                        id: 5,
+                        questionTitle: "Bu bir soru başlığıdır",
+                        questionContent: "Bu bir soru içeriğidir",
+                        urgentStatus: 2,
+                        requestDate: "2024-04-03 10:10:10",
+                        status: 1,
+                    },
+                    {
+                        id: 6,
+                        questionTitle: "Bu bir soru başlığıdır",
+                        questionContent: "Bu bir soru içeriğidir",
+                        urgentStatus: 2,
+                        requestDate: "2024-04-03 10:10:10",
+                        status: 1,
+                    },
+                ],
+            };
+
+            const getQuestionTitle = () => {
+                return data.questions.map((question) => {
+                    return question.questionTitle;
+                });
+            };
+
+            window.onload = () => {
+                const panelQuestionRequests = document.querySelector(
+                    ".panel-question-requests"
+                );
+
+                data.questions.sort((a, b) =>
+                    b.requestDate.localeCompare(a.requestDate)
+                );
+
+                data.questions.forEach((question) => {
+                    let urgentBadge;
+                    let urgentBullet;
+
+                    const getStatusText = (statusId) => {
+                        const status = {
+                            1: "New",
+                            2: "Approved",
+                            3: "ChangeRequested",
+                            4: "Rejected",
+                        };
+
+                        return status[statusId] || "Unknown";
+                    };
+
+                    const questionStatus = getStatusText(question.status);
+                    console.log(
+                        `Soru başlığı: ${question.questionTitle}, Durumu: ${questionStatus}`
+                    );
+
+                    switch (question.urgentStatus) {
+                        case 1:
+                            urgentBadge =
+                                '<span class="badge badge-light-danger fs-8 fw-bolder text-danger">Yeni</span>';
+                            urgentBullet = `<span class="bullet bullet-vertical h-40px bg-danger"></span>`;
+                            break;
+                        case 2:
+                            urgentBadge =
+                                '<span class="badge badge-light-warning fs-8 fw-bolder text-warning">Yeni</span>';
+                            urgentBullet = `<span class="bullet bullet-vertical h-40px bg-warning"></span>`;
+                            break;
+                        case 3:
+                            urgentBadge =
+                                '<span class="badge badge-light-primary fs-8 fw-bolder text-primary">Yeni</span>';
+                            urgentBullet = `<span class="bullet bullet-vertical h-40px bg-primary"></span>`;
+                    }
+
+                    const div = document.createElement("div");
+                    div.innerHTML = `
+                                <div class="d-flex align-items-center mb-8">
+                                    ${urgentBullet}
+                                    <div class="form-check form-check-custom form-check-solid mx-5">
+                                        <input class="form-check-input" type="checkbox" value="" />
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <a href="#" class="text-gray-800 text-hover-primary fw-bolder fs-6">${question.questionTitle}</a>
+                                        <span class="text-muted fw-bold d-block">${question.requestDate}</span>
+                                                       </div>
+
+                                                       ${urgentBadge}
+
+                                </div>
+                            `;
+                    panelQuestionRequests.appendChild(div.firstElementChild);
+                });
+            };
+        </script>
+    </div>
+</div>

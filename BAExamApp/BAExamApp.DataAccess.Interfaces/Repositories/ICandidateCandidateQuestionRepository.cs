@@ -1,0 +1,5 @@
+﻿namespace BAExamApp.DataAccess.Interfaces.Repositories;
+public interface ICandidateCandidateQuestionRepository : IRepository, IAsyncRepository, IAsyncQueryableRepository<CandidateCandidateQuestion>, IAsyncFindableRepository<CandidateCandidateQuestion>, IAsyncUpdateableRepository<CandidateCandidateQuestion>, IAsyncInsertableRepository<CandidateCandidateQuestion>
+{
+
+}

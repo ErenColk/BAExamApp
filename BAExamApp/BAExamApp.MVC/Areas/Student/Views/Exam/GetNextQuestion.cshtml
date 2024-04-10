@@ -1,0 +1,325 @@
+﻿@model StudentStudentQuestionDetailsVM
+
+@{
+    ViewData["Title"] = SharedLocalizer["Exam"];
+    Layout = "";
+    var answerOrder = 1;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ba quiz</title>
+    <link href="~/css/reset.css" rel="stylesheet" />
+    <link href="~/css/main.css" rel="stylesheet" />
+    <link href="~/css/custom-props.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/animation.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script>
+        hljs.highlightAll();
+    </script>
+
+
+</head>
+<body>
+    <partial name="~/Areas/Admin/Views/Animation/_LoaderAnimationPartialView.cshtml" />
+    <div id="root">
+        <header>
+            <div class="container-quiz-title">
+                <h1>@ViewBag.ExamName</h1>
+            </div>
+
+
+
+            <div class="chip timer timer-remaining-quiz">
+                <p id="transitionCounterMain">
+                    <div class="row" style="width:97%">
+                        <div class="d-flex justify-content-end mt-3 me-3" style="font-weight: bold; color: #414b59; font-size: 1.6em;" id="remainingTime"></div>
+                    </div>
+                </p>
+            </div>
+
+            <div id="transitionCounter" style="font-weight: bold; margin:10px; color: #414b59; font-size: 1.2em;">
+                <span id="transitionCounterText"></span>
+                <span id="transitionCounterNumber"></span>
+            </div>
+        </header>
+
+        <div class="container-indicator">
+            <section class="step-indicator">
+                @for (int i = 1; i <= Model.QuestionCount; i++)
+                {
+
+                    @if (i == 1 || i == Model.QuestionOrder - 1 || i == Model.QuestionOrder || i == Model.QuestionOrder + 1 || i == Model.QuestionCount)
+                    {
+                        <div class="step step@(i)">
+                            <div class="step-icon @(i== Model.QuestionOrder? "current-step" : (ViewBag.answerList[i - 1] ? "active-step": "" ))">@i</div>
+                        </div>
+
+                    }
+
+                    @if (i == 1 && 3 < Model.QuestionOrder)
+                    {
+                        <div class="indicator-line"></div>
+                    }
+                    else if (i == Model.QuestionCount - 1 && Model.QuestionCount - 2 > Model.QuestionOrder)
+                    {
+                        <div class="indicator-line"></div>
+                    }
+
+                }
+            </section>
+        </div>
+
+        <main>
+
+            <section class="quiz">
+                <form method="post" class="frm-quiz">
+                    <input asp-for="QuestionAnswers" hidden />
+                    <input asp-for="QuestionCount" hidden />
+                    <input asp-for="StudentQuestionId" hidden />
+                    <input asp-for="TimeGiven" hidden />
+                    <input asp-for="TimeStarted" hidden />
+                    <input id="examType" name="examType" value="@ViewBag.ExamTypeJSON" hidden />
+
+
+
+
+                    <div class="container position-absolute top-0 start-50">
+                        <div class="row">
+                            <div class="col-3 p-2">
+                                <span class="text-success fs-2">@SharedLocalizer["Question"] @Model.QuestionOrder</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chip timer timer-remaining-question">
+                        <p>
+                            <div id="questionCounterMain" class="col-3 p-2" style="font-weight: bold; margin:10px; color: #414b59; font-size: 1.2em;">
+                                <span id="questionCounterText"></span>
+                                <span id="questionCounter"></span>
+                            </div>
+                        </p>
+                    </div>
+                    <div class="container position-absolute top-50 start-50 translate-middle">
+                        <div class="row">
+                            <div class="question-media scrollable-indicator">
+
+                                @if (Model.Image != null)
+                                {
+                                    <figure>
+                                        <img class="question-image" id="questionImage" src="data:image/png;base64,@(Model.Image)" />
+                                    </figure>
+
+                                }
+
+                                @*  <figure>
+                                <img src="~/images/sample-q.png" alt="soru1" />
+                                </figure> *@
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-12 p-2">
+                                @if (Model.QuestionType == QuestionType.MultipleAnswer)
+                                {
+                                    <span class="text-primary"><b>[@SharedLocalizer["There_May_Be_More_Than_One_Answer_To_this_Question"]]</b></span>
+                                }
+                                else if (Model.QuestionType == QuestionType.Test)
+                                {
+                                    <span class="text-primary"><b>[@SharedLocalizer["This_Question_Is_An_Ongoing_Selected_Question"]]</b></span>
+                                }
+                                <br />
+                                <br />
+                                <div class="question">
+                                    <p>@Model.Content</p>
+                                </div>
+
+                            </div>
+                        </div>
+                        <input class="form-control" name="studentAnswers" id="studentAnswers" hidden />
+                        <div class="form-check form-check-inline mt-5 frm-quiz-answers">
+                            @foreach (var answer in Model.QuestionAnswers)
+                            {
+                                <label class="form-check-label frm-quiz-label" for="answer-@answerOrder">
+                                    @if (Model.QuestionType == QuestionType.MultipleAnswer)
+                                    {
+                                        <input class="form-check-input choices" type="checkbox" name="quiz-answer" id="answer-@answerOrder" value="@answer.Id" onchange="updateStudentAnswers()">
+                                    }
+                                    else if (Model.QuestionType == QuestionType.Test)
+                                    {
+                                        <input class="form-check-input choices" type="radio" name="quiz-answer" id="answer-@answerOrder" value="@answer.Id" onchange="updateStudentAnswers()">
+                                    }
+                                    else if (Model.QuestionType == QuestionType.TrueFalse)
+                                    {
+                                        <input class="form-check-input choices" type="radio" name="quiz-answer" id="answer-@answerOrder" value="@answer.Id" onchange="updateStudentAnswers()">
+                                    }
+
+                                    else if (Model.QuestionType == QuestionType.Classic)
+                                    {
+                                        <textarea name="t1" id="t1" rows="8" placeholder="Lütfen cevabınızı yazınız." required minlength="10"></textarea>
+                                    }
+                                    @if (answer.IsAnswerImage)
+                                    {
+                                        <div class="col-lg-12">
+                                            <img id="defaultImage"
+                                                 class="col-lg-12 img-fluid"
+                                                 src="@answer.Answer"
+                                                 style="max-height:150px;max-width:300px;"
+                                                 alt="Profile" />
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @answer.Answer
+                                    }
+                                </label>
+                                answerOrder++;
+                            }
+                        </div>
+                    </div>
+
+
+                    @if (Model.QuestionCount == Model.QuestionOrder)
+                    {
+                        <button type="submit" id="next-question-button">@SharedLocalizer["Finish_Exam"]</button>
+                    }
+                    else
+                    {
+                        <button type="submit" id="next-question-button">@SharedLocalizer["Send_Reply"]</button>
+                    }
+                </form>
+            </section>
+        </main>
+
+        <footer>
+            <a href="#" class="logo-ba">
+                <img src="~/images/BATeknoloji_Logo_RGB.png"
+                     alt="Bilgeadam Teknoloji" />
+            </a>
+        </footer>
+    </div>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/student-question.js"></script>
+    <script src="~/js/animation-start.js"></script>
+
+
+
+
+    <script>
+        window.addEventListener('beforeunload', function (event) {
+            debugger
+            startLoader();
+        });
+
+        window.addEventListener("load", function (event) {
+            debugger
+            stopLoader();
+        });
+    </script>
+
+    <script>
+        var examDateTime = new Date('@Model.ExamDateTime.ToString("yyyy-MM-ddTHH:mm:ss")');
+        var examDurationMilliseconds = @Model.ExamDuration.TotalMilliseconds;
+        var examDurationTime = new Date(examDateTime.getTime() + examDurationMilliseconds);
+        let examType = JSON.parse(document.getElementById("examType").value);
+
+        var questionDiv = document.querySelector('.question');
+        var questionImage = document.getElementById('questionImage');
+
+        questionDiv.style.userSelect = 'none';
+
+        questionDiv.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+        });
+
+        questionImage.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+        });
+
+
+
+        function updateRemainingTime() {
+            var currentTime = new Date();
+            var timeDifference = examDateTime.getTime() + examDurationMilliseconds - currentTime.getTime();
+
+            if (timeDifference <= 0) {
+                if (examType === 1) {
+                    document.getElementById("remainingTime").innerHTML = "Sorununun Süresi Tamamlandığında, Rapor Ekranına Gidilecektir...";
+                    return;
+                }
+                //window.location.href = '@Url.Action("GetExamResult", "Exam")';
+
+                document.getElementById("next-question-button").click();
+            }
+
+            var hours = Math.floor(timeDifference / (1000 * 60 * 60));
+            var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+            var remainingTimeMessage = '<div style="background: linear-gradient(to bottom, #ffffff, #e6e6e6); padding: 5px; border-radius: 10px; text-align: center;">' +
+                '<div style="font-weight: 600; font-size: 0.7rem;  color: #414b59; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); margin-bottom: 10px; text-decoration: underline; text-decoration-color: var(--md-ref-palette-primary60); text-decoration-thickness: 2px;">Sınav Bitimine Kalan Süre</div>' +
+                '<div id="countdown" style="font-size: 1.7rem; font-weight: 700; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); margin-bottom: 5px;">' +
+                hours + " : " +
+                (minutes < 10 ? "0" + minutes : minutes) + " : " +
+                (seconds < 10 ? "0" + seconds : seconds) +
+                '</div></div>';
+
+            document.getElementById("remainingTime").innerHTML = remainingTimeMessage;
+
+
+
+
+        }
+
+        setInterval(updateRemainingTime, 1000);
+
+        updateRemainingTime();
+
+
+        let rootEl = document.querySelector("#root");
+
+        let throttle = (func, waitDuration = 50) => {
+            let timeout;
+            return () => {
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+                timeout = setTimeout(func, waitDuration);
+            };
+        };
+
+        window.addEventListener(
+            "scroll",
+            throttle(() => {
+                let sY = window.scrollY;
+                if (sY > 24) {
+                    if (!rootEl.classList.contains("compact")) {
+                        rootEl.classList.add("compact");
+                    }
+                } else {
+                    rootEl.classList.remove("compact");
+                }
+            }, 20)
+        );
+
+
+    </script>
+    <script>
+        var questionCount = @Model.QuestionCount;
+        var currentQuestionOrder = @Model.QuestionOrder;
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+﻿@using BAExamApp.MVC.Areas.Admin.Models.QuestionRevisionVMs;
+@model IEnumerable<QuestionRevisionListVM>
+
+@{
+    ViewData["Title"] = @SharedLocalizer["Question_Revision_List", SharedLocalizer["Question"]];
+}
+
+<section class="section dashboard">
+    <div class="row">
+        <div class="card recent-sales overflow-auto">
+            <div class="card-body">
+                <h5 class="card-title">@SharedLocalizer["Question_Revision_List", SharedLocalizer["Question"]]</h5>
+                <table class="table table-row-bordered datatable">
+                    <thead>
+                        <tr class="text-center">
+                            <th class="text-center fw-bold text-white" style="background-color:rgb(134,138,155)">@Html.DisplayNameFor(Model=>Model.CreatedDate)</th>
+                            <th class="text-center fw-bold text-white " style="background-color: rgb(134,138,155)">@Html.DisplayNameFor(model => model.RequesterAdminName)</th>
+                            <th class="text-center fw-bold text-white" style="background-color: rgb(134,138,155)">@Html.DisplayNameFor(model => model.ModifiedDate)</th>
+                            <th class="text-center fw-bold text-white" style="background-color: rgb(134,138,155)">@Html.DisplayNameFor(model=>model.RequestedTrainerName)</th>
+                            <th class="text-center fw-bold text-white" style="background-color: rgb(134,138,155)">@Html.DisplayNameFor(model => model.RequestDescription)</th>
+                            <th class="text-center fw-bold text-white" style="background-color: rgb(134,138,155)">@Html.DisplayNameFor(model => model.RevisionConclusion)</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model is not null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="categories text-center">
+                                        <a>
+                                            <span class="post_category">@item.CreatedDate.ToString("dd.MM.yyyy")</span>
+                                        </a>
+                                    </td>
+                                    <td class="categories text-center">
+                                        <a>
+                                            <span class="post_category">@item.RequesterAdminName</span>
+                                        </a>
+                                    </td>
+
+                                    <td class="categories text-center">
+                                        <a>
+                                            <span class="post_category">@item.ModifiedDate.ToString("dd.MM.yyyy")</span>
+                                        </a>
+                                    </td>
+                                    <td class="categories text-center">
+                                        <a>
+                                            <span class="post_category">@item.RequestedTrainerName</span>
+                                        </a>
+                                    </td>
+                                    <td class="categories text-center">
+                                        <a>
+                                            <span class="post_category">@item.RequestDescription</span>
+                                        </a>
+                                    </td>
+                                    <td class="categories text-center">
+                                        <a>
+                                            <span class="post_category">@item.RevisionConclusion</span>
+                                        </a>
+                                    </td>
+                              
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="categories text-center">
+                                    @SharedLocalizer["No_Data"]
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

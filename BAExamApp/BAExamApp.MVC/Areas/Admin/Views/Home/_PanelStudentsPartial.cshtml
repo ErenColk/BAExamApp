@@ -1,0 +1,92 @@
+﻿@using BAExamApp.Entities.DbSets
+@model List<StudentExamsForAdminVM>;
+
+
+
+@{
+    List<StudentExamsForAdminVM> students = new List<StudentExamsForAdminVM>()
+        {
+        new StudentExamsForAdminVM { StudentFullName = "Ahmet Veli", LatestClassroom = "Online-2", Score = 95 },
+        new StudentExamsForAdminVM { StudentFullName = "Cansu Irmak", LatestClassroom = "HS-18", Score = 92 },
+        new StudentExamsForAdminVM { StudentFullName = "Nehir Durmaz", LatestClassroom = "HS-14", Score = 88 },
+        new StudentExamsForAdminVM { StudentFullName = "Sakine Duran", LatestClassroom = "HS-16", Score = 85,  },
+        new StudentExamsForAdminVM { StudentFullName = "Ahmet Güçbilen", LatestClassroom = "Online-5", Score = 78 }
+        };
+
+}
+
+<div class="col-md-8">
+    <div class="card card-xl-stretch mt-4 p-3 h-400px ">
+        <div class="card-header border-0 pt-5">
+            <h3 class="card-title align-items-start flex-column">
+                <span class="card-label fw-bolder fs-3 mb-1">En Başarılı Öğrenciler</span>
+                <span class="text-muted mt-1 fw-bold fs-7">254 öğrenci arasında</span>
+            </h3>
+        </div>
+
+        <div class="table-responsive ">
+            <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+                <thead>
+                    <tr class="fw-bolder text-muted">
+                        <th class="w-25px">
+                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                <!-- <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="1"
+                                    data-kt-check="true"
+                                    data-kt-check-target=".widget-9-check"
+                                  /> -->
+                            </div>
+                        </th>
+                        <th class="min-w-200px">Öğrenciler</th>
+                        <th class="min-w-150px">Sınıf</th>
+                        <th class="min-w-150px">Başarı Oranı</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (students != null)
+                    {
+                        @foreach (var student in students)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <!-- <input class="form-check-input widget-9-check" type="checkbox" value="1" /> -->
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-45px me-5">
+                                            <img src="~/images/AdminDashboard/icon-student.png" alt="" />
+                                        </div>
+                                        <div class="d-flex justify-content-start flex-column">
+                                            <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">@student.StudentFullName</a>
+                                            @* <span class="text-muted fw-bold text-muted d-block fs-7">@student.LatestClassroom</span> *@
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="#" class="text-dark fw-bolder text-hover-primary d-block fs-6">@student.LatestClassroom</a>
+                                    <span class="text-muted fw-bold text-muted d-block fs-7">Web, UI/UX Design</span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-flex flex-column w-90 me-2">
+                                        <div class="d-flex flex-stack mb-2">
+                                            <span class="text-muted me-2 fs-7 fw-bold">% @student.Score</span>
+                                        </div>
+                                        <div class="progress h-6px w-100">
+                                            <div class="progress-bar bg-primary" role="progressbar" style="width: @student.Score%" aria-valuenow="@student.Score" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>

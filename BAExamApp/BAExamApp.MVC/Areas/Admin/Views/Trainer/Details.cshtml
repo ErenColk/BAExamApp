@@ -1,0 +1,246 @@
+﻿@model AdminTrainerDetailsVM
+
+@{
+    ViewData["Title"] = ViewLocalizer["Trainer_Details"];
+}
+
+<div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
+    <!--begin::Card header-->
+    <div class="card-header cursor-pointer">
+        <!--begin::Card title-->
+        <div class="card-title m-0">
+            <h3 class="fw-bolder m-0">@ViewLocalizer["Trainer_Details"]</h3>
+        </div>
+        <!--end::Card title-->
+        <!--begin::Action-->
+        <div class="align-self-center">
+            <a asp-controller="Trainer" asp-action="Index" class="btn btn-secondary align-self-center">@SharedLocalizer["Back_List"]</a>
+            <a id="kt-update-trainer" onclick="loadTrainerData('@Model.Id')" class="btn btn-primary align-self-center" data-kt-docs-table-filter="edit_row" data-trainer-id="@Model.Id" data-bs-toggle="modal" data-bs-target="#kt_modal_update_user">
+                @SharedLocalizer["Edit"]
+            </a>
+            <a class="btn btn-danger align-self-center deleteAction" data-id="@Model.Id"> @SharedLocalizer["Delete"] </a>
+        </div>
+        <!--end::Action-->
+    </div>
+    <!--begin::Card header-->
+    <!--begin::Card body-->
+    <div class="card-body p-9">
+        <div class="row">
+            <div class="col-lg-4">
+                <!--begin::Row-->
+                <div class="row mb-7">
+                    <div id="cover-image-container">
+                        @if (Model.Image != null && Model.Image != "0" && Model.Image != "1")
+                        {
+                            <div id="item-header-cover-image">
+                                <img src="data:image/jpeg;base64,@Model.Image"
+                                     class="avatar user-1-avatar avatar-150 photo" width="150"
+                                     height="150" alt="" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="item-header-cover-image">
+                                <img src="~/media/avatars/blank.png"
+                                     class="avatar user-1-avatar avatar-150 photo" width="150"
+                                     height="150" alt="" />
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!--end::Row-->
+                <!--begin::Row-->
+                <div class="row mb-7">
+                    <!--begin::Label-->
+                    <label class="col-lg-6 fw-bold text-muted">@Html.DisplayNameFor(model => model.FirstName):</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-6">
+                        <span class="fw-bolder fs-6 text-gray-800" id="firstName">@Model.FirstName</span>
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Row-->
+                <!--begin::Row-->
+                <div class="row mb-7">
+                    <!--begin::Label-->
+                    <label class="col-lg-6 fw-bold text-muted">@Html.DisplayNameFor(model => model.LastName):</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-6">
+                        <span class="fw-bolder fs-6 text-gray-800" id="lastName">@Model.LastName</span>
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Row-->
+                <!--begin::Row-->
+                <div class="row mb-7">
+                    <!--begin::Label-->
+                    <label class="col-lg-6 fw-bold text-muted">@Html.DisplayNameFor(model => model.Gender):</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-6">
+                        <span class="fw-bolder fs-6 text-gray-800">@(Model.Gender == true ? SharedLocalizer["Man"] : SharedLocalizer["Woman"])</span>
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Row-->
+                <!--begin::Row-->
+                <div class="row mb-7">
+                    <!--begin::Label-->
+                    <label class="col-lg-6 fw-bold text-muted">@Html.DisplayNameFor(model => model.Email):</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-6">
+                        <span class="fw-bolder fs-6 text-gray-800">@Model.Email</span>
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Row-->
+                <!--begin::Row-->
+                <div class="row mb-7">
+                    <!--begin::Label-->
+                    <label class="col-lg-6 fw-bold text-muted">@Html.DisplayNameFor(model => model.DateOfBirth):</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-6">
+                        <span class="fw-bolder fs-6 text-gray-800">@Model.DateOfBirth.ToShortDateString()</span>
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Row-->
+                <!--begin::Row-->
+                <div class="row mb-7">
+                    <!--begin::Label-->
+                    <label class="col-lg-6 fw-bold text-muted">@Html.DisplayNameFor(model => model.CityName):</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-6">
+                        <span class="fw-bolder fs-6 text-gray-800">@Model.CityName</span>
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Row-->
+            </div>
+            <div class="col-lg-3 mb-7">
+                <!--begin::Accordion-->
+                <div class="accordion w-75 scroll h-400px" id="kt_accordion_1">
+                    <div class="accordion-item">
+                        <h5 class="accordion-header" id="kt_accordion_1_header_1">
+                            <button class="accordion-button fs-4 fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_1" aria-expanded="false" aria-controls="kt_accordion_1_body_1">
+                                @SharedLocalizer["Talent_Names"]
+                            </button>
+                        </h5>
+                        <div id="kt_accordion_1_body_1" class="accordion-collapse collapse" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                            <div class="accordion-body">
+                                <div class="row mb-7">
+                                    <div class="col-lg-12">
+                                        @foreach (var talent in Model.TrainerTalents)
+                                        {
+                                            <div class="fw-bolder fs-6 text-gray-800">@talent.TalentName</div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Accordion-->
+            </div>
+            <div class="col-lg-5">
+                <div class="table-responsive scroll h-400px">
+                    <!--begin::Table-->
+                    <table class="table table-flush align-middle table-row-bordered table-row-solid gy-4">
+                        <!--begin::Table head-->
+                        <thead>
+                            <!--begin::Table row-->
+                            <tr class="text-gray-400 fw-bolder fs-6 text-uppercase gs-0">
+                                <th class="min-w-150px">@SharedLocalizer["Classroom_Name"]</th>
+                                <th class="min-w-150px">@SharedLocalizer["Opening_Date"]</th>
+                                <th class="min-w-150px">@SharedLocalizer["Closed_Date"]</th>
+                                <th class="min-w-150px">@SharedLocalizer["Student_Count"]</th>
+                            </tr>
+                            <!--end::Table row-->
+                        </thead>
+                        <!--end::Table head-->
+                        <!--begin::Table body-->
+                        <tbody class="fw-bolder text-gray-600">
+                            @foreach (var clasroom in Model.TrainerClassrooms)
+                            {
+                                <tr>
+                                    <td>@clasroom.ClassroomName</td>
+                                    <td>@clasroom.OpeningDate.ToShortDateString()</td>
+                                    <td>@clasroom.ClosedDate.ToShortDateString()</td>
+                                    <td>@clasroom.StudentCount</td>
+                                    <td>
+                                        <div class="menu-item px-3">
+                                            <a class="menu-link px-3" asp-controller="Classroom" asp-action="Details" asp-route-id="@clasroom.Id">@SharedLocalizer["Classroom_Details"]</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <!--end::Table body-->
+                    </table>
+                    <!--end::Table-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Card body-->
+</div>
+
+<partial name="~/Areas/Admin/Views/Trainer/Update.cshtml" model="new AdminTrainerUpdateVM()" />
+<partial name="~/Areas/Admin/Views/Trainer/_AddTalentPartialView.cshtml" model="new AdminTalentAddVM()" />
+
+@section Scripts
+{
+    <script src="~/newlayouts/src/js/custom/apps/user-management/users/view/update-trainer.js"></script>
+    <script src="~/newlayouts/src/js/custom/apps/user-management/users/list/add-talent.js"></script>
+    @* <script src="~/lib/limonte-sweetalert2/sweetalert2.all.js"></script> *@
+    <script>
+        var localizedTexts = {
+            confirmTitle: '@SharedLocalizer["Confirm_Delete_Title"]', // "fullName adlı admini silmek istediğinize emin misiniz?"
+            confirmText: '@SharedLocalizer["Confirm_Delete_Text"]', // "Bu işlem geri alınamaz!"
+            confirmButtonText2: '@SharedLocalizer["Confirm_Button_Text"]', // "Evet, sil!"
+            cancelButtonText2: '@SharedLocalizer["Cancel_Button_Text"]', // "Hayır, iptal et"
+            unsavedChangesTitle: '@SharedLocalizer["Unsaved_Changes_Title"]',
+            unsavedChangesText: '@SharedLocalizer["Unsaved_Changes_Text"]',
+            confirmButtonText: '@SharedLocalizer["Yes_Leave"]',
+            cancelButtonText: '@SharedLocalizer["No_Stay"]',
+            formSubmittedText: '@SharedLocalizer["Form_Submitted_Text"]',
+            okButtonText: '@SharedLocalizer["Ok_Button_Text"]'
+        };
+        $(".deleteAction").click(function () {
+            const id = $(this).attr("data-id");
+            const fullName = document.getElementById("firstName").innerText + " " + document.getElementById("lastName").innerText
+            Swal.fire({
+                title: `${fullName} ${localizedTexts.confirmTitle}`,
+                text: localizedTexts.confirmText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: localizedTexts.confirmButtonText2,
+                cancelButtonText: localizedTexts.cancelButtonText2
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("Delete")" + "?id=" + id,
+                        success: function (result) {
+                            if (result.isSuccess) {
+                                setTimeout(() => location.href = "/Admin/Trainer", 2000)
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('[ data-bs-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}
